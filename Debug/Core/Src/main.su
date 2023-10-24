@@ -1,0 +1,14 @@
+../Drivers/CMSIS/Include/core_cm7.h:2229:22:SCB_EnableICache	4	static,ignoring_inline_asm
+../Drivers/CMSIS/Include/core_cm7.h:2281:22:SCB_EnableDCache	24	static,ignoring_inline_asm
+../Core/Src/main.c:80:9:isTouchWithinRectangle	24	static
+../Core/Src/main.c:87:6:checkMap	48	static
+../Core/Src/main.c:138:5:checkStartGame	48	static
+../Core/Src/main.c:182:6:setting_winPage	624	static
+../Core/Src/main.c:727:6:HAL_TIM_PeriodElapsedCallback	32	static
+../Core/Src/main.c:756:6:HAL_ADC_ConvCpltCallback	120	static
+../Core/Src/main.c:804:6:HAL_GPIO_EXTI_Callback	32	static
+../Core/Src/main.c:825:6:SetPlayers	352	static
+../Core/Src/main.c:864:6:startGame	96	static
+../Core/Src/main.c:885:5:main	136	static
+../Core/Src/main.c:947:6:SystemClock_Config	88	static
+../Core/Src/main.c:1008:6:Error_Handler	4	static
