@@ -1,6 +1,5 @@
 "./Core/Src/adc.o"
 "./Core/Src/dma.o"
-"./Core/Src/endGamePage.o"
 "./Core/Src/gameUtility.o"
 "./Core/Src/gpio.o"
 "./Core/Src/icons.o"

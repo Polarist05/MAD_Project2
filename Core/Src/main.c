@@ -167,10 +167,8 @@ int checkStartGame(int numPlayerState[], int mapState[], int characterState[],
 	}
 
 	if (numPlayerState[0] && checkPlay == 3) {
-		*displayScreen = 2;
 		return 1;
 	} else if (numPlayerState[1] && checkPlay == 4) {
-		*displayScreen = 2;
 		return 1;
 	} else {
 		checkPlay = 0;
@@ -179,14 +177,11 @@ int checkStartGame(int numPlayerState[], int mapState[], int characterState[],
 }
 int stateWin = 0;
 int displayScreen = 0;
-void setting_winPage() {
 	int numPlayerState[2] = { 0, 0 };
 	int characterState[5] = { 0, 0, 0, 0, 0 };
 	int characterState_2[5] = { 0, 0, 0, 0, 0 };
 	int mapState[3] = { 0, 0, 0 };
-	 displayScreen = 0;
 	int mapID = 0;
-	stateWin =0;
 
 	Rectangle numPlayerRectangle[2] = { };
 	Rectangle charRectangle[5] = { };
@@ -223,12 +218,18 @@ void setting_winPage() {
 	Rectangle bNext = { 230, 210, 250, 230 }; //size: 20x20
 	Rectangle bBack = { 10, 210, 30, 230 }; //size: 20x20
 
-	const uint8_t SCREEN_ROTATION = SCREEN_HORIZONTAL_1;
-	ILI9341_Set_Rotation(SCREEN_ROTATION);
+Image* getCharacterYellowList(int index){
+
 	Image characterYellowList[5] = { playerIcon1Yellow_32, playerIcon2Yellow_32,
 			playerIcon3Yellow_32, playerIcon4Yellow_32, playerIcon5Yellow_32 };
+	return &characterYellowList[index];
+}
+Image* getCharacterOrangeList(int index){
+
 	Image characterOrangeList[5] = { playerIcon1Orange_32, playerIcon2Orange_32,
-			playerIcon3Orange_32, playerIcon4Orange_32, playerIcon5Orange_32 };
+				playerIcon3Orange_32, playerIcon4Orange_32, playerIcon5Orange_32 };
+	return &characterOrangeList[index];
+}
 
 	Point cursor;
 	Point drawPos;
@@ -236,7 +237,6 @@ void setting_winPage() {
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-}
 //----------------------------------------------------------
 
 
@@ -259,6 +259,92 @@ PlayerUI* playerUIs;
 Queue bombs ={NULL,NULL,0};
 Queue detonateEffects = {NULL,NULL,0};
 int32_t buffer[4];
+Rectangle bExit = { 108, 190, 203, 215 };
+void endPageInit(){
+	drawPos.x = 0;
+					drawPos.y = 0;
+					winnerPage.drawPoint = drawPos;
+					drawImageAtPoint(winnerPage, SCREEN_ROTATION);
+					Rectangle winnerPic = { 100, 25, 212, 137 };
+
+					Rectangle winnerTextContainer = { 95, 142, 215, 170 };
+					ILI9341_Draw_Filled_Rectangle_Coord(winnerTextContainer.x0,
+							winnerTextContainer.y0, winnerTextContainer.x1,
+							winnerTextContainer.y1, YELLOW);
+
+		//			Rectangle bReplay = { 55, 175, 150, 200 };
+		//			Rectangle bNext = { 155, 175, 250, 200 };
+
+
+		//			ILI9341_Draw_Filled_Rectangle_Coord(bReplay.x0, bReplay.y0,
+		//					bReplay.x1, bReplay.y1, CYAN);
+		//			ILI9341_Draw_Filled_Rectangle_Coord(bNext.x0, bNext.y0, bNext.x1,
+		//					bNext.y1, GREEN);
+					ILI9341_Draw_Filled_Rectangle_Coord(bExit.x0, bExit.y0, bExit.x1,
+							bExit.y1, ORANGE);
+
+		//			ILI9341_Draw_Text("<REPLAY", 60, 179, BLACK, 2, CYAN);
+		//			ILI9341_Draw_Text("NEXT>", 175, 179, BLACK, 2, GREEN);
+					ILI9341_Draw_Text("EXIT", 133, 195, RED, 2, ORANGE);
+					//�����褹����
+					if(stateWin == 0){
+						ILI9341_Draw_Text("WINNER", 103, 143, BLUE, 3, YELLOW);
+						drawPos.x = winnerPic.x0;
+						drawPos.y = winnerPic.y0;
+						character112List[playerWinner[0]->imageIndex].drawPoint = drawPos;
+						drawImageAtPoint(character112List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
+					}
+					//����
+					else if(stateWin > 0){
+						ILI9341_Draw_Text("DRAW", 120, 143, BLUE, 3, YELLOW);
+						//���� 2
+						if(stateWin == 1){
+							drawPos.x = winnerPic.x0;
+							drawPos.y = winnerPic.y0+28;
+							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x1-56;
+							drawPos.y = winnerPic.y0+28;
+							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
+						}
+						//���� 3
+						if(stateWin == 2){
+							drawPos.x = winnerPic.x0;
+							drawPos.y = winnerPic.y0;
+							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x0+56;
+							drawPos.y = winnerPic.y0;
+							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x0+32;
+							drawPos.y = winnerPic.y0+56;
+							character56List[playerWinner[2]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[2]->imageIndex], SCREEN_ROTATION);
+
+						}
+						//���� 4
+						if(stateWin == 3){
+							drawPos.x = winnerPic.x0;
+							drawPos.y = winnerPic.y0;
+							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x0+56;
+							drawPos.y = winnerPic.y0;
+							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x0;
+							drawPos.y = winnerPic.y0+56;
+							character56List[playerWinner[2]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[2]->imageIndex], SCREEN_ROTATION);
+							drawPos.x = winnerPic.x0+56;
+							drawPos.y = winnerPic.y0+56;
+							character56List[playerWinner[3]->imageIndex].drawPoint = drawPos;
+							drawImageAtPoint(character56List[playerWinner[3]->imageIndex], SCREEN_ROTATION);
+						}
+					}
+}
 void IFDisplayScreen1(){
 	drawPos.x = 0;
 					drawPos.y = 0;
@@ -293,14 +379,11 @@ void IFDisplayScreen1(){
 					charRectangle[3] = ch4;
 					charRectangle[4] = ch5;
 					//picture
-					for (int i = 0;
-							i
-									< sizeof(characterYellowList)
-											/ sizeof(characterYellowList[0]); i++) {
+					for (int i = 0;i<5; i++) {
 						drawPos.x = charRectangle[i].x0;
 						drawPos.y = charRectangle[i].y0;
-						characterYellowList[i].drawPoint = drawPos;
-						drawImageAtPoint(characterYellowList[i], SCREEN_ROTATION);
+						getCharacterYellowList(i)->drawPoint = drawPos;
+						drawImageAtPoint(*getCharacterYellowList(i), SCREEN_ROTATION);
 					}
 
 					ILI9341_Draw_Filled_Rectangle_Coord(bPlay.x0, bPlay.y0, bPlay.x1,
@@ -441,13 +524,14 @@ void IFDisplayScreen1(){
 									bNext.x1, bNext.y1, PURPLE);
 							ILI9341_Draw_Text(">", 238, 211, WHITE, 2, PURPLE);
 							if (isTouchWithinRectangle(bNext, cursor)) {
-								displayScreen = 1;
 								break;
 							}
 						}
 						if (checkStartGame(numPlayerState, mapState, characterState,
 								characterState_2,&displayScreen)) {
 							if (isTouchWithinRectangle(bPlay, cursor)){
+								displayScreen = 2;
+								startGame();
 								break;
 							}
 						}
@@ -475,14 +559,11 @@ void IFDisplayScreen2(){
 					//			RED);
 					//			ILI9341_Draw_Filled_Rectangle_Coord(ch5.x0, ch5.y0, ch5.x1, ch5.y1,
 					//			RED);
-					for (int i = 0;
-							i
-									< sizeof(characterOrangeList)
-											/ sizeof(characterOrangeList[0]); i++) {
+					for (int i = 0;i<5; i++) {
 						drawPos.x = charRectangle[i].x0;
 						drawPos.y = charRectangle[i].y0;
-						characterOrangeList[i].drawPoint = drawPos;
-						drawImageAtPoint(characterOrangeList[i], SCREEN_ROTATION);
+						getCharacterOrangeList(i)->drawPoint = drawPos;
+						drawImageAtPoint(* getCharacterOrangeList(i), SCREEN_ROTATION);
 					}
 					ILI9341_Draw_Filled_Rectangle_Coord(bNext.x0 - 2, bNext.y0 - 2,
 							bNext.x1 + 2, bNext.y1 + 2, WHITE);
@@ -580,148 +661,66 @@ void IFDisplayScreen2(){
 							ILI9341_Draw_Filled_Rectangle_Coord(bPlay.x0, bPlay.y0,
 									bPlay.x1, bPlay.y1, PINK);
 							ILI9341_Draw_Text("PLAY", 108, 211, WHITE, 2, PINK);
-							if (isTouchWithinRectangle(bPlay, cursor))
+							if (isTouchWithinRectangle(bPlay, cursor)){
+								displayScreen = 2;
+								startGame();
 								break;
+							}
 						}
 						HAL_Delay(100);
 					}
 
 }
-void IFDisplayScreen3(){
-	clock = 0;
-					endGameFlag = false;
-					int playerCount;
-					for(int i=0;i<2;i++){
-						if(numPlayerState[i]){
-							playerCount = i+1;
-						}
-					}
-					int player1Index;
-					for(int i=0;i<5;i++){
-						if(characterState[i]){
-							player1Index = i+1;
-						}
-					}
-					int player2Index;
-					for(int i=0;i<5;i++){
-						if(characterState_2[i]){
-							player2Index = i+1;
-						}
-					}
-					int mapIndex;
-					for(int i=0;i<3;i++){
-						if(mapState[i]){
-							mapIndex = i;
-						}
-					}
-					startGame(playerCount,player1Index,player2Index,mapIndex);
-					while(!endGameFlag){}
-					printOut("END LOOP\n");
-					HAL_TIM_Base_Stop_IT(&htim1);
-					displayScreen = 3;
+void IFDisplayScreen3(TIM_HandleTypeDef *htim){
+
+	playerWinnerCount=0;
+		if(htim==&htim1){
+			TimeTotal += 20;
+			int deadFlagTotal = 0;
+			for(int i=0;i<playerCount;i++){
+				if(players[i].deadFlag)
+					deadFlagTotal ++;
+				else
+					playerWinner[playerWinnerCount++]=&players[i];
+			}
+			if(deadFlagTotal+1<playerCount){
+				HAL_ADC_Start_DMA(&hadc1,(uint32_t *)buffer,4);
+			}
+			else{
+				stateWin = playerWinnerCount-1;
+				endPageInit();
+				displayScreen =3;
+				return;
+			}
+		}
+		else if(htim==&htim2){
+			clock++;
+			if(clock>GAME_TIME){
+
+				displayScreen =3;
+				endPageInit();
+			}
+		}
 }
 void IFDisplayScreen4(){
-	drawPos.x = 0;
-					drawPos.y = 0;
-					winnerPage.drawPoint = drawPos;
-					drawImageAtPoint(winnerPage, SCREEN_ROTATION);
-					Rectangle winnerPic = { 100, 25, 212, 137 };
+	Point cursur;
+	if (TP_Touchpad_Pressed()) {
+								uint16_t position_array[2];
 
-					Rectangle winnerTextContainer = { 95, 142, 215, 170 };
-					ILI9341_Draw_Filled_Rectangle_Coord(winnerTextContainer.x0,
-							winnerTextContainer.y0, winnerTextContainer.x1,
-							winnerTextContainer.y1, YELLOW);
-
-		//			Rectangle bReplay = { 55, 175, 150, 200 };
-		//			Rectangle bNext = { 155, 175, 250, 200 };
-					Rectangle bExit = { 108, 190, 203, 215 };
-
-		//			ILI9341_Draw_Filled_Rectangle_Coord(bReplay.x0, bReplay.y0,
-		//					bReplay.x1, bReplay.y1, CYAN);
-		//			ILI9341_Draw_Filled_Rectangle_Coord(bNext.x0, bNext.y0, bNext.x1,
-		//					bNext.y1, GREEN);
-					ILI9341_Draw_Filled_Rectangle_Coord(bExit.x0, bExit.y0, bExit.x1,
-							bExit.y1, ORANGE);
-
-		//			ILI9341_Draw_Text("<REPLAY", 60, 179, BLACK, 2, CYAN);
-		//			ILI9341_Draw_Text("NEXT>", 175, 179, BLACK, 2, GREEN);
-					ILI9341_Draw_Text("EXIT", 133, 195, RED, 2, ORANGE);
-					//�����褹����
-					if(stateWin == 0){
-						ILI9341_Draw_Text("WINNER", 103, 143, BLUE, 3, YELLOW);
-						drawPos.x = winnerPic.x0;
-						drawPos.y = winnerPic.y0;
-						character112List[playerWinner[0]->imageIndex].drawPoint = drawPos;
-						drawImageAtPoint(character112List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
-					}
-					//����
-					else if(stateWin > 0){
-						ILI9341_Draw_Text("DRAW", 120, 143, BLUE, 3, YELLOW);
-						//���� 2
-						if(stateWin == 1){
-							drawPos.x = winnerPic.x0;
-							drawPos.y = winnerPic.y0+28;
-							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x1-56;
-							drawPos.y = winnerPic.y0+28;
-							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
-						}
-						//���� 3
-						if(stateWin == 2){
-							drawPos.x = winnerPic.x0;
-							drawPos.y = winnerPic.y0;
-							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x0+56;
-							drawPos.y = winnerPic.y0;
-							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x0+32;
-							drawPos.y = winnerPic.y0+56;
-							character56List[playerWinner[2]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[2]->imageIndex], SCREEN_ROTATION);
-
-						}
-						//���� 4
-						if(stateWin == 3){
-							drawPos.x = winnerPic.x0;
-							drawPos.y = winnerPic.y0;
-							character56List[playerWinner[0]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[0]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x0+56;
-							drawPos.y = winnerPic.y0;
-							character56List[playerWinner[1]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[1]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x0;
-							drawPos.y = winnerPic.y0+56;
-							character56List[playerWinner[2]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[2]->imageIndex], SCREEN_ROTATION);
-							drawPos.x = winnerPic.x0+56;
-							drawPos.y = winnerPic.y0+56;
-							character56List[playerWinner[3]->imageIndex].drawPoint = drawPos;
-							drawImageAtPoint(character56List[playerWinner[3]->imageIndex], SCREEN_ROTATION);
-						}
-					}
-					while (1) {
-						if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_10) == GPIO_PIN_RESET) {
-							//displayScreen = 2;
-							break;
-						}
-						if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_RESET) {
-							//displayScreen = 2;
-							//mapID++;
-							break;
-						}
-						if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_12) == GPIO_PIN_RESET) {
-							displayScreen = 0;
-							numPlayerState[0] = 0;
-							numPlayerState[1] = 0;
-							break;
-						}
-						HAL_Delay(200);
-					}
+								if (TP_Read_Coordinates(position_array) == TOUCHPAD_DATA_OK) {
+									if (SCREEN_ROTATION == SCREEN_HORIZONTAL_1) {
+										xPos = position_array[1];
+										yPos = SCREEN_HEIGHT - position_array[0];
+									} else if (SCREEN_ROTATION == SCREEN_HORIZONTAL_2) {
+										xPos = SCREEN_WIDTH - position_array[1];
+										yPos = position_array[0];
+									}
+								}
+								cursor.x = xPos;
+								cursor.y = yPos;
+								if(isTouchWithinRectangle(bExit, cursur ))
+										displayScreen =1;
+	}
 
 }
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
@@ -732,38 +731,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		IFDisplayScreen2();
 	}
 	if (displayScreen == 2) {
-		IFDisplayScreen3();
-			}
+		IFDisplayScreen3(htim);
+	}
 	if (displayScreen == 3) {
 		IFDisplayScreen4();
-							}
-	if(clock>=GAME_TIME){
-		stateWin = playerWinnerCount-1;
-		endGameFlag = true;
-		return;
 	}
-	playerWinnerCount=0;
-	if(htim==&htim1){
-		TimeTotal += 20;
-		int deadFlagTotal = 0;
-		for(int i=0;i<playerCount;i++){
-			if(players[i].deadFlag)
-				deadFlagTotal ++;
-			else
-				playerWinner[playerWinnerCount++]=&players[i];
-		}
-		if(deadFlagTotal+1<playerCount){
-			HAL_ADC_Start_DMA(&hadc1,(uint32_t *)buffer,4);
-		}
-		else{
-			stateWin = playerWinnerCount-1;
-			endGameFlag = true;
-			return;
-		}
-	}
-	else if(htim==&htim2){
-		clock++;
-	}
+
 }
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	int time=TimeTotal;
@@ -873,7 +846,32 @@ void SetPlayers(int humanCount,int player1Index,int player2Index,bool* isBot){
 	Transform UI_Bg =Transform_init(Vector2_init(0,0),Vector2_init(5+(16+UI_MARGIN)*5,240),TopLeft);
 	Draw(&UI_Bg,BLACK);
 }
-void startGame(int count,int player1Index,int player2Index,int mapIndex){
+
+void startGame(){
+	int playerCount;
+							for(int i=0;i<2;i++){
+								if(numPlayerState[i]){
+									playerCount = i+1;
+								}
+							}
+							int player1Index;
+							for(int i=0;i<5;i++){
+								if(characterState[i]){
+									player1Index = i+1;
+								}
+							}
+							int player2Index;
+							for(int i=0;i<5;i++){
+								if(characterState_2[i]){
+									player2Index = i+1;
+								}
+							}
+							int mapIndex;
+							for(int i=0;i<3;i++){
+								if(mapState[i]){
+									mapIndex = i;
+								}
+							}
 	for(int i=0;i<mapSize.y;i++){
 		for(int j=0;j<mapSize.x;j++){
 			Vector2 index = Vector2_init(j,i);
@@ -884,9 +882,9 @@ void startGame(int count,int player1Index,int player2Index,int mapIndex){
 	setMap(mapIndex);
 
 	bool isBot[4]={false,false,true,true};
-	 isBot[1] = count==1?true:false;
-	SetPlayers(count,player1Index,player2Index,isBot);
-	HAL_TIM_Base_Start_IT(&htim1);
+	 isBot[1] = playerCount==1?true:false;
+	SetPlayers(playerCount,player1Index,player2Index,isBot);
+	HAL_TIM_Base_Start_IT(&htim2);
 }
 /* USER CODE END 0 */
 
@@ -943,11 +941,11 @@ int main(void)
 	  character112List[i]=arr2[i];
   }
   srand(HAL_GetTick());
-  HAL_TIM_Base_Start_IT(&htim2);
   ILI9341_Set_Rotation(SCREEN_HORIZONTAL_1);
+  HAL_TIM_Base_Start_IT(&htim1);
   while (1)
   {
-	  setting_winPage();
+
   }
   /* USER CODE END 3 */
 }
